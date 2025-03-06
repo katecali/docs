@@ -1,0 +1,163 @@
+---
+title: "Developer Integrations"
+---
+
+import { Cards } from "nextra/components";
+import { Github, Tag  } from "lucide-react";
+import Image from 'next/image'
+
+# Integrating Your Scripts
+One feature that the current vMenu lacks is the accessibility & bridge between which is something we've personally had to make custom edits to the source code for which of course our goal is to take away the need to repeatedly edit the source code and break it down to provide easy to use events, exports and other integration ready features for developers and server owners to plug and play as they need.
+
+## Events
+The action event provides different actions that we have added triggers for inside of vMenu so that you can listen to updates on other resources and in combination with our other exports, block actions or log usage.
+An example use case is for updating the consumption rate of fuel when infinite fuel is enabled.
+
+#### Action Logging
+```lua showLineNumbers filename="integrations.lua"
+---@class logAction
+---@field action string
+---@field data table
+AddEventHandler("vMenu:Integrations:Action", function(action, data)
+    if action == "infinitefuel" then
+        ---@field enabled boolean
+        lib.print.debug("Infinite Fuel: " .. tostring(data.enabled))
+    elseif action == "licenseplate" then
+        ---@field handle integer
+        ---@field plate string
+        lib.print.debug("License Plate Updated: " .. data.handle .. " - " .. data.plate)
+        --[[
+            Example Usage:
+            if doesTextContainBlacklistedWord(data.plate) then
+                SetVehicleNumberPlateText(data.handle, "PLATE")
+                TriggerServerEvent("banplayer")
+            end
+        --]]
+    elseif action == "noclip" then
+        ---@field enabled boolean
+        lib.print.debug("NoClip: " .. tostring(data.enabled))
+    elseif action == "playernames" then
+        ---@field enabled boolean
+        lib.print.debug("Player Names: " .. tostring(data.enabled))
+    elseif action == "playerblips" then
+        ---@field enabled boolean
+        lib.print.debug("Player Blips: " .. tostring(data.enabled))
+    end
+end)
+```
+
+#### Notifications
+By default, vMenu will use ox_lib notifications.<br/>You can disable this and use the base GTA notifications by changing `vmenu_using_custom_notify` in your `config/permissions.cfg`
+
+This is just our template notify function using ox_lib's notifications with some custom styling for different noti types. (Edit this in `config/config_client`)
+You can modify this as you like - or replace it entirely with an export to your resource.
+```lua showLineNumbers filename="config_client.lua"
+Notify = function(title, msg, ntype, time)
+    -- these are just different examples i did for ox_lib, you can change these of course how you like
+    if ntype == "error" then
+        lib.notify({
+            title = title,
+            description = msg,
+            position = 'center-right',
+            style = {
+                backgroundColor = '#141517',
+                color = '#C1C2C5',
+                ['.description'] = {
+                    color = '#909296'
+                }
+            },
+            icon = 'ban',
+            iconColor = '#C53030'
+        })
+    elseif ntype == "alert" then
+        lib.notify({
+            title = title,
+            description = msg,
+            position = 'center-right',
+            style = {
+                backgroundColor = "#ff963b",
+                color = "#000000",
+                [".description"] = {
+                    color = "#000000"
+                }
+            },
+            icon = "fa-solid fa-triangle-exclamation",
+            iconColor = "#C53030"
+        })
+    else
+        lib.notify({
+            title = title,
+            description = msg,
+            type = ntype,
+            duration = time,
+            position = "center-right"
+        })
+    end
+end
+```
+
+## Exports
+We use exports so that we can return a value to the resource providing you as the developer the ability to easily block actions.
+Common examples include the blocking of spawning vehicles and weapons inside of jail or whilst restrained (cuffed/ziptied).
+
+Alternatively, you can block the usage of staff permissions like names & blips when a user is not clocked in by talking to your duty script via exports.
+
+#### CanDoInteraction
+```lua showLineNumbers
+---@class canDoInteraction
+---@field action string
+---@return boolean Returns true if the player can do the interaction, false otherwise
+exports("canDoInteraction", function(action)
+    if action == "spawnvehicle" then
+
+    elseif action == "refillammo" then
+
+    elseif action == "spawnweapon" then
+
+    elseif action == "spawnloadout" then
+
+    elseif action == "noclip" then
+
+    elseif action == "nightvision" then
+
+    elseif action == "thermalvision" then
+
+    elseif action == "playernames" then
+
+    elseif action == "playerblips" then
+        --[[
+            Example:
+            if not exports.StaffDuty.ClockedIn() then
+                -- This would block the player from activating player blips
+                return false
+            end
+        ]]--
+    end
+    return true -- Always leave as true, and handle each interaction type as needed with an if statement.
+end)
+```
+
+#### Temporary Outfit Loading
+This loads the outfit from the code and applies it to the current player's ped.
+> [!NOTE]
+>
+> This will not modify any saved data and is intended for temporary functionality like setting a jail outfit or for jobs, worker outfits.
+```lua showLineNumbers
+local JAIL_OUTFITCODE = 1445
+-- This is a fake event, you would integrate this into your script where needed
+RegisterNetEvent("Interactions:PlayerJailed", function()
+    exports.vMenu:loadOutfitFromCode(JAIL_OUTFITCODE)
+end)
+
+local jobOutfits = {
+    ["cafe"] = 9451,
+    ["janitor"] = 4612
+}
+RegisterNetEvent("Jobs:ClockedIn", function(jobName)
+    local changeOutfit = jobOutfits[jobName]
+    if changeOutfit then
+        -- if an outfit exists for this job
+        exports.vMenu:loadOutfitFromCode(changeOutfit)
+    end
+end)
+```

@@ -1,0 +1,68 @@
+---
+title: "Installation"
+---
+
+import { Cards, Steps } from "nextra/components";
+import { Github, Tag  } from "lucide-react";
+import Image from 'next/image'
+
+# Installing the Resource
+<Steps>
+### Download the latest [release](https://github.com/Gravxd/vMenu-ox/releases/latest)
+Make sure to download the `vMenu.zip` - this will be the drag & drop ready resource.
+ 
+### Configure to your liking
+ 
+Permissions and other configuration options are available through `config/permissions.cfg`
+<br/>vMenu's default configuration guide can be found on [Vespura's website](https://docs.vespura.com/vmenu/configuration/)
+
+### Additional Configuration
+As part of our fork, we offer new options to add improvements to your server such as:
+- `setr vmenu_using_custom_notify true`
+<br/>Easily configure vMenu to use your custom notification script with our handy integrations file.
+- `set vmenu_disable_ai false`
+<br/>Disable NPC spawning on your server with a simple convar - no need for additional scripts.
+These are all included in your `config/permissions.cfg`
+
+We also have client & server config files in the `config` folder with various functions and misc features.
+
+### OPTIONAL: Code Sharing System
+We've developed a custom sharing system allowing communities like roleplay servers to conveniently & easily share outfits & vehicles between players with simple share codes.
+These codes and their data is stored in your server's database so please ensure you have all [dependencies](/docs/vmenuox/information#dependencies) installed.
+
+Here's a [video preview](https://www.youtube.com/watch?v=qWYHNAXnCHw) of our vehicle code sharing system in action!
+<br/>Or you can watch a [video preview](https://www.youtube.com/watch?v=kRUil1EUO-Q) of our outfit code sharing system.
+
+You can enable both, one or none, dealer's choice.
+
+<Steps>
+### Enable Sharing
+You'll need to enable both of the systems in the `config/permissions.cfg`
+```cfg
+# Enable or disable the outfit sharing system - this requires oxmysql or a sql resource
+setr vmenu_outfitcodes false
+
+# Enable or disable the vehicle sharing system - this also requires oxmysql or a sql resource
+setr vmenu_vehiclecodes false
+```
+
+### Setup Database Tables
+You can find the required queries to run in your database in the root directory of the resource inside `database.sql`
+
+</Steps>
+
+
+### Start the resource
+Add `ensure vMenu` to your `server.cfg` and restart the server.
+> [!WARNING]
+>
+> Make sure that `ox_lib` is started before `vMenu` in your `server.cfg`
+> ```cfg
+> start ox_lib
+> start oxmysql # You only need to have this if you are enabling the share code system.
+> exec @vMenu/config/permissions.cfg
+> start vMenu
+> ```
+
+
+</Steps>

@@ -1,0 +1,25 @@
+---
+title: "Changing Textures"
+---
+
+import { Cards } from "nextra/components";
+import { Github, Tag  } from "lucide-react";
+import Image from 'next/image'
+
+# Changing vMenu Banner / Colours etc
+This section is optional and is not required. It is recommended to only do this if you know what you are doing.
+
+> [!NOTE]
+>
+> You will need [OpenIV](https://openiv.com/) for this part (editing textures)
+
+In the vMenu resource, inside of the `stream folder` there is a file called `commonmenu.ytd`.
+<br/>This is what vMenu uses to get textures for it's banner, selectors and other UI elements.
+
+For the main banner, you need to replace/update the texture for `interaction_bgd` and ensure the updated texture remains `512x128`
+
+For the selector, you need to edit `gradient_nav` which should be `512x64`
+
+<Image src="https://grav.wtf/vmenuox-textures.webp" alt="Hello" width={500} height={500} />
+
+Here's an example image where we've edited the slider to be a purple gradient rather than the default white.

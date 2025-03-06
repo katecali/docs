@@ -1,0 +1,32 @@
+---
+title: "Information"
+---
+
+import { Cards } from "nextra/components";
+import { Github, Tag  } from "lucide-react";
+import Image from 'next/image'
+
+# Engine Sound Menu
+A simplistic & easy to use menu that allows vehicles to change their engine sound syncing to all clients instantly.
+
+<Cards>
+  <Cards.Card
+    icon={<Github  />}
+    title="View on Github"
+    href="https://github.com/Gravxd/enginesound-menu"
+  />
+  <Cards.Card
+    icon={<Tag  />}
+    title="Latest Release"
+    href="https://github.com/Gravxd/enginesound-menu/releases/latest"
+  />
+</Cards>
+
+<br/>
+<Image src="https://grav.wtf/enginesound2.webp" alt="PreviewPic" width={500} height={500} />
+
+#### Dependencies
+[ox_lib](https://github.com/overextended/ox_lib/releases) - Required to run this resource.<br/>
+
+This resource uses statebags to sync vehicle data between clients, allowing all players to hear your modified engine sound.
+

@@ -1,0 +1,81 @@
+---
+title: "Installation"
+---
+
+import { Cards, Steps } from "nextra/components";
+import { Github, Tag  } from "lucide-react";
+import Image from 'next/image'
+
+# Installing the Resource
+
+<Steps>
+### Download the latest [release](https://github.com/Gravxd/enginesound-menu/releases/latest)
+
+
+### Permissions
+
+To give players access to the menu, you'll need to give them the following ace permission:
+<br/>`command.enginesound`
+
+Example to give all players regardless of roles, access to the menu:
+<br/>`add_ace builtin.everyone command.enginesound allow`
+
+If you want to give permissions a different way, such as linked to your framework, a script or something else - you can edit the permissions function inside of `server_config`
+```lua showLineNumbers filename="server_config.lua"
+HasPermission = function(src)
+    -- your permission function here - you can integrate your framework for jobs/perms etc
+    return IsPlayerAceAllowed(src, 'command.enginesound')
+end
+```
+
+### Configuration & Adding Custom Sounds
+
+You'll now need to edit `client_config` - here you can change the keybind, menu positioning and more!
+<br/>We also have a feature called `StoreSoundsByModel` which will automatically save what engine sound you last used on a specific model (spawncode) and re-apply that sound when you re-enter that vehicle.
+
+Additionally, you can add your own notification script here, by default we use ox_lib.
+
+At the bottom, you will see the list of engine sounds players can choose from:
+```lua showLineNumbers filename="client_config.lua"
+EngineSounds = {
+    -- Engine Sound Name/Label --> Hash of engine audio (what you'd normally put in vehicles.meta)
+    ["Baller"] = "baller",
+    ["Adder"] = "adder",
+    ["Lazer"] = "lazer",
+}
+```
+
+The left hand side is the label (display name) - this is what users see.
+<br/>The right side is our engine sound hash or key.
+
+> [!TIP]
+>
+> Engine sound hashes on custom vehicles already in your server can be found inside its `vehicles.meta` file under `audioNameHash`
+
+### Example Installation of Custom Engine Sound
+Here's an example engine sound mod from [Aquaphobic on GTA5Mods](https://www.gta5-mods.com/vehicles/toyota-chaser-1jz-gte-i6t-engine-sound-oiv-add-on-fivem-sound)
+
+Once downloaded and installed, you can see in his mod description, he says to add `aqm275amg` to the `vehicles.meta` under `audioNameHash`.
+
+You will now edit the config above to look like this:
+```lua showLineNumbers filename="client_config.lua"
+EngineSounds = {
+    -- Engine Sound Name/Label --> Hash of engine audio (what you'd normally put in vehicles.meta)
+    ["Baller"] = "baller",
+    ["Adder"] = "adder",
+    ["Lazer"] = "lazer",
+    ["Toyota Chaser 1JZ-GTE I6T"] = "aqm275amg",
+}
+```
+
+### Start the Resource
+```cfg
+start ox_lib
+start chroma-enginesoundmenu
+```
+
+> [!WARNING]
+>
+> Make sure that ox_lib is started before our resource.
+
+</Steps>
